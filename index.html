@@ -4,21 +4,49 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battleships</title>
+    <title>Calculator</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <header>
         <h1 class="title">
-            Battleships
+            Calculator
         </h1>
     </header>
-    <main>
-        <div class="user-grid"></div>
-        <div class="computer-grid"></div>
+    <main class="main">
+        <div class="calculator">
+            <div class="calculator-grid">
+                <div class="output">
+                    <!-- <div class="display">&nbsp;</div> -->
+                    <div class="display">&nbsp;</div>
+                </div>
+                <button class="button clear" data-clear value="clear">Clear</button>
+                <button class="button delete" data-delete value="del">Delete</button>
+                <button class="button operators" data-operator value="/">%</button>
+                <button class="button operators add" data-operator value="+">+</button>
+                <button class="button numbers" data-number value="1">1</button>
+                <button class="button numbers" data-number value="2">2</button>
+                <button class="button numbers" data-number value="3">3</button>
+                <button class="button operators multiply" data-operator value="*">*</button>
+                <button class="button numbers" data-number value="4">4</button>
+                <button class="button numbers" data-number value="5">5</button>
+                <button class="button numbers" data-number value="6">6</button>
+                <button class="button operators divide" data-operator value="/">/</button>
+                <button class="button numbers" data-number value="7">7</button>
+                <button class="button numbers" data-number value="8">8</button>
+                <button class="button numbers" data-number value="9">9</button>
+                <button class="button operators minus" data-operator value="-">-</button>
+                <button class="button numbers" data-number value="0">0</button>
+                <button class="button numbers" data-number value=".">.</button>
+                <button class="button operators equals" data-equals value="=">=</button>
+            </div>
+        </div>
     </main>
     <footer>
+        <a href="https://github.com/al-moreton">&copy; Al Moreton</a>
+        <pre>|</pre>
+        <a href="https://github.com/al-moreton/calculator">Source Code</a>
     </footer>
     <script src="script.js"></script>
 </body>
