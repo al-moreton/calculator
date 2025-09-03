@@ -8,7 +8,8 @@ const result = document.querySelector('.result');
 
 let currentNumber = '';
 let prevNumber = '';
-let operation = '';
+let currentOperation = '';
+let prevOperation = '';
 let formula = '';
 let computedResult = '';
 
@@ -28,10 +29,14 @@ function divide(a, b) {
     computedResult = a / b;
 }
 
+function percentage(a, b) {
+    computedResult = (a / 100) * b;
+}
+
 function operate() {
     first = parseFloat(prevNumber);
     second = parseFloat(currentNumber);
-    switch (operation) {
+    switch (currentOperation) {
         case '+':
             add(first, second);
             break;
@@ -44,11 +49,15 @@ function operate() {
         case '/':
             divide(first, second);
             break;
+        case '%':
+            percentage(first, second);
+            break;
         default:
             return;
     }
     prevNumber = computedResult;
-    operation = '';
+    prevOperation = currentOperation;
+    currentOperation = '';
     currentNumber = '';
 }
 
@@ -57,12 +66,16 @@ function getNumber(digit) {
 }
 
 function updateDisplay() {
-    formula = prevNumber + operation + currentNumber;
+    formula = prevNumber + currentOperation + currentNumber;
     display.textContent = formula;
 }
 
 function chooseOperator(digit) {
-    operation = digit;
+    if (currentOperation) {
+        currentOperation = digit;
+        updateDisplay();
+    }
+    currentOperation = digit;
     if (!currentNumber) {
         return;
     } else {
@@ -72,19 +85,31 @@ function chooseOperator(digit) {
 }
 
 function deleteLastDigit() {
+    if (currentNumber) {
     currentNumber = currentNumber.toString().slice(0, -1)
+    } else if (!currentNumber) {
+        currentOperation = '';
+        updateDisplay();
+    }
 }
 
 numberButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        getNumber(e.target.value);
-        updateDisplay();
+        if (prevOperation && !currentOperation) {
+            return;
+        } else {
+            getNumber(e.target.value);
+            updateDisplay();
+        }
     })
 })
 
 operatorButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (operation) {
+        if (currentOperation && !currentNumber) {
+            chooseOperator(e.target.value);
+            updateDisplay();
+        } else if (currentOperation) {
             operate();
             chooseOperator(e.target.value);
             updateDisplay();
@@ -108,8 +133,15 @@ deleteButton.addEventListener('click', function (e) {
 clearButton.addEventListener('click', function (e) {
     prevNumber = '';
     currentNumber = '';
-    operation = '';
+    currentOperation = '';
+    prevOperation = '';
     updateDisplay();
 })
 
-// after pressing =, should not be able to add more numbers until another operator is assigned
+// DONE after pressing =, should not be able to add more numbers until another operator is assigned
+// how to move calc above after operator selected
+// DONE add % operation 
+// DONE delete doesn't work if trying to delete operation, or if just pressed equals
+// DONE if selecting operation twice in a row, it should overwrite the existing operation
+// allow negative numbers
+// if operator is deleted, and another number is added, only the 2nd number added is saved to number variable
