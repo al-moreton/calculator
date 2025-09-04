@@ -10,6 +10,7 @@ let currentNumber = '';
 let prevNumber = '';
 let currentOperation = '';
 let prevOperation = '';
+let prevFormula = '';
 let formula = '';
 let computedResult = '';
 
@@ -55,6 +56,8 @@ function operate() {
         default:
             return;
     }
+    formula = `${prevNumber} ${currentOperation} ${currentNumber}`;
+    prevFormula = formula;
     prevNumber = computedResult;
     prevOperation = currentOperation;
     currentOperation = '';
@@ -66,8 +69,16 @@ function getNumber(digit) {
 }
 
 function updateDisplay() {
-    formula = prevNumber + currentOperation + currentNumber;
-    display.textContent = formula;
+    result.textContent = currentNumber;
+
+    if (currentOperation) {
+        display.textContent = prevNumber + currentOperation;
+    } else if (computedResult) {
+        display.textContent = prevFormula.toString();
+        result.textContent = computedResult;
+    } else {
+        display.textContent = '';
+    }
 }
 
 function clear() {
@@ -105,7 +116,7 @@ function deleteLastDigit() {
 
 numberButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (prevNumber && computedResult) {
+        if (prevNumber && computedResult && !currentOperation) {
             clear();
             getNumber(e.target.value);
             updateDisplay();
@@ -125,6 +136,9 @@ operatorButtons.forEach(function (button) {
             updateDisplay();
         } else if (currentOperation) {
             operate();
+            chooseOperator(e.target.value);
+            updateDisplay();
+        } else if (!currentOperation && !currentNumber) {
             chooseOperator(e.target.value);
             updateDisplay();
         } else if (!currentNumber && e.target.value === '-') {
@@ -152,7 +166,7 @@ clearButton.addEventListener('click', function (e) {
 })
 
 // DONE after pressing =, should not be able to add more numbers until another operator is assigned
-// how to move calc above after operator selected
+// DONE how to move calc above after operator selected
 // DONE add % operation 
 // % operation to have different possibilities depending on order of input
 // DONE delete doesn't work if trying to delete operation, or if just pressed equals
@@ -160,3 +174,4 @@ clearButton.addEventListener('click', function (e) {
 // DONE allow negative numbers
 // DONE if operator is deleted, and another number is added, only the 2nd number added is saved to number variable
 // round numbers
+// 3 - 3 doesn't work, because 0 is interpreted as !=
