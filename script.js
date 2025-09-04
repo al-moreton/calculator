@@ -133,6 +133,11 @@ function formatResult(num) {
     return Math.round((num + Number.EPSILON) * 1e12) / 1e12;
 }
 
+function normalizeOperator(digit) {
+    if (digit === '−') return '-';
+    return digit;
+}
+
 numberButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
         if (prevNumber && computedResult && !currentOperation) {
@@ -148,26 +153,28 @@ numberButtons.forEach(function (button) {
 
 operatorButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (!currentNumber && !prevNumber && e.target.value === '-') {
+        const digit = normalizeOperator(e.target.value);
+
+        if (!currentNumber && !prevNumber && digit === '-') {
             currentNumber = '-';
             updateDisplay();
             return;
         }
 
         if (currentOperation && !currentNumber) {
-            chooseOperator(e.target.value);
+            chooseOperator(digit);
             updateDisplay();
             return;
         }
 
         if (currentOperation && currentNumber) {
             operate();
-            chooseOperator(e.target.value);
+            chooseOperator(digit);
             updateDisplay();
             return;
         }
 
-        chooseOperator(e.target.value);
+        chooseOperator(digit);
         updateDisplay();
     });
 });
@@ -186,3 +193,5 @@ clearButton.addEventListener('click', function (e) {
     clear();
     updateDisplay();
 })
+
+// need to normalize - input for mobile devices, ask chatgpt!
