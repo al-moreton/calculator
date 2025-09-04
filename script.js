@@ -70,6 +70,14 @@ function updateDisplay() {
     display.textContent = formula;
 }
 
+function clear() {
+    prevNumber = '';
+    currentNumber = '';
+    currentOperation = '';
+    prevOperation = '';
+    computedResult = '';
+}
+
 function chooseOperator(digit) {
     if (currentOperation) {
         currentOperation = digit;
@@ -86,17 +94,21 @@ function chooseOperator(digit) {
 
 function deleteLastDigit() {
     if (currentNumber) {
-    currentNumber = currentNumber.toString().slice(0, -1)
+        currentNumber = currentNumber.toString().slice(0, -1)
     } else if (!currentNumber) {
         currentOperation = '';
+        currentNumber = prevNumber;
+        prevNumber = '';
         updateDisplay();
     }
 }
 
 numberButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (prevOperation && !currentOperation) {
-            return;
+        if (prevNumber && computedResult) {
+            clear();
+            getNumber(e.target.value);
+            updateDisplay();
         } else {
             getNumber(e.target.value);
             updateDisplay();
@@ -106,13 +118,17 @@ numberButtons.forEach(function (button) {
 
 operatorButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (currentOperation && !currentNumber) {
+        if (currentOperation && !currentNumber && e.target.value === '-') {
+            currentNumber = '-';
+        } else if (currentOperation && !currentNumber) {
             chooseOperator(e.target.value);
             updateDisplay();
         } else if (currentOperation) {
             operate();
             chooseOperator(e.target.value);
             updateDisplay();
+        } else if (!currentNumber && e.target.value === '-') {
+            currentNumber = '-';
         } else {
             chooseOperator(e.target.value);
         }
@@ -131,17 +147,16 @@ deleteButton.addEventListener('click', function (e) {
 })
 
 clearButton.addEventListener('click', function (e) {
-    prevNumber = '';
-    currentNumber = '';
-    currentOperation = '';
-    prevOperation = '';
+    clear();
     updateDisplay();
 })
 
 // DONE after pressing =, should not be able to add more numbers until another operator is assigned
 // how to move calc above after operator selected
 // DONE add % operation 
+// % operation to have different possibilities depending on order of input
 // DONE delete doesn't work if trying to delete operation, or if just pressed equals
 // DONE if selecting operation twice in a row, it should overwrite the existing operation
-// allow negative numbers
-// if operator is deleted, and another number is added, only the 2nd number added is saved to number variable
+// DONE allow negative numbers
+// DONE if operator is deleted, and another number is added, only the 2nd number added is saved to number variable
+// round numbers
