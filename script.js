@@ -27,7 +27,11 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    computedResult = a / b;
+    if (b === 0) {
+        computedResult = `Error!`;
+    } else {
+        computedResult = a / b;
+    }
 }
 
 function percentage(a, b) {
@@ -56,6 +60,7 @@ function operate() {
         default:
             return;
     }
+    computedResult = formatResult(computedResult)
     formula = `${prevNumber} ${currentOperation} ${currentNumber}`;
     prevFormula = formula;
     prevNumber = computedResult;
@@ -65,15 +70,22 @@ function operate() {
 }
 
 function getNumber(digit) {
+    if (digit === '.' && currentNumber.includes('.')) {
+        return;
+    }
+    if (digit === '-' && currentNumber === '') {
+        currentNumber = '-';
+        return;
+    }
     currentNumber += digit;
 }
 
 function updateDisplay() {
     result.textContent = currentNumber;
 
-    if (currentOperation) {
-        display.textContent = prevNumber + currentOperation;
-    } else if (computedResult) {
+    if (currentOperation !== '') {
+        display.textContent = `${prevNumber} ${currentOperation}`;
+    } else if (computedResult !== '') {
         display.textContent = prevFormula.toString();
         result.textContent = computedResult;
     } else {
@@ -114,6 +126,13 @@ function deleteLastDigit() {
     }
 }
 
+function formatResult(num) {
+    if (typeof num !== 'number') {
+        return num;
+    }
+    return Math.round((num + Number.EPSILON) * 1e12) / 1e12;
+}
+
 numberButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
         if (prevNumber && computedResult && !currentOperation) {
@@ -129,26 +148,29 @@ numberButtons.forEach(function (button) {
 
 operatorButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        if (currentOperation && !currentNumber && e.target.value === '-') {
+        if (!currentNumber && !prevNumber && e.target.value === '-') {
             currentNumber = '-';
-        } else if (currentOperation && !currentNumber) {
+            updateDisplay();
+            return;
+        }
+
+        if (currentOperation && !currentNumber) {
             chooseOperator(e.target.value);
             updateDisplay();
-        } else if (currentOperation) {
+            return;
+        }
+
+        if (currentOperation && currentNumber) {
             operate();
             chooseOperator(e.target.value);
             updateDisplay();
-        } else if (!currentOperation && !currentNumber) {
-            chooseOperator(e.target.value);
-            updateDisplay();
-        } else if (!currentNumber && e.target.value === '-') {
-            currentNumber = '-';
-        } else {
-            chooseOperator(e.target.value);
+            return;
         }
+
+        chooseOperator(e.target.value);
         updateDisplay();
-    })
-})
+    });
+});
 
 equalsButton.addEventListener('click', function (e) {
     operate();
@@ -164,14 +186,3 @@ clearButton.addEventListener('click', function (e) {
     clear();
     updateDisplay();
 })
-
-// DONE after pressing =, should not be able to add more numbers until another operator is assigned
-// DONE how to move calc above after operator selected
-// DONE add % operation 
-// % operation to have different possibilities depending on order of input
-// DONE delete doesn't work if trying to delete operation, or if just pressed equals
-// DONE if selecting operation twice in a row, it should overwrite the existing operation
-// DONE allow negative numbers
-// DONE if operator is deleted, and another number is added, only the 2nd number added is saved to number variable
-// round numbers
-// 3 - 3 doesn't work, because 0 is interpreted as !=
