@@ -133,7 +133,7 @@ function formatResult(num) {
     return Math.round((num + Number.EPSILON) * 1e12) / 1e12;
 }
 
-function normalizeOperator(digit) {
+function normaliseOperator(digit) {
     if (digit === '−') return '-';
     return digit;
 }
@@ -153,7 +153,7 @@ numberButtons.forEach(function (button) {
 
 operatorButtons.forEach(function (button) {
     button.addEventListener('click', (e) => {
-        const digit = normalizeOperator(e.target.value);
+        const digit = normaliseOperator(e.target.value);
 
         if (!currentNumber && !prevNumber && digit === '-') {
             currentNumber = '-';

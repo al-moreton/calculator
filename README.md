@@ -21,7 +21,12 @@ I do feel that as I was building I was just adding IF statements to fix errors a
 - Had to add in previous/current variables for numbers, operators, and the overall calculation
 - Added `formatResult` function to avoid any issues with weird JS formatting
 - Added `normaliseOperator` function to avoid any issues with mobile devices and how subtract buttons don't use the same ASCII characters
+- Added an error message when dividing by 0
+- Added the ability to delete an operator and choose a new one
+- Added the ability to add negative numbers
 
 ## Things I would like to add
 - Add keyboard support for desktop use
 - Better build the % `percentage` function - calculators aren't all the same when it comes to the % button, so needs looking into
+- Allow a negative number be added after an operator (currently it just converts the existing operator into a -)
+- A memory function
