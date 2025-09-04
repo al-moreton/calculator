@@ -193,5 +193,3 @@ clearButton.addEventListener('click', function (e) {
     clear();
     updateDisplay();
 })
-
-// need to normalize - input for mobile devices, ask chatgpt!
